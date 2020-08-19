@@ -1,0 +1,21 @@
+---
+#################### YUM ##############################
+- name: upgrade packages on RPM based systems
+  hosts: all
+
+  tasks:
+    - name: check for updates (yum)
+      yum: list=updates update_cache=true
+      register: yumoutput
+
+    - debug: msg="{{ inventory_hostname}} {{ yumoutput.results }}"
+      when: yumoutput.results|length > 0
+
+    # request manual ack before proceeding with package upgrade
+    - pause:
+      when: yumoutput.results|length > 0
+
+    - name: install all updates
+      yum:
+        name: '*'
+        state: latest
