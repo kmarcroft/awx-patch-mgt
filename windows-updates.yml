@@ -1,0 +1,24 @@
+---
+- name: search and install Windows updates
+  hosts: all
+
+  tasks:
+    - name: Search Windows update
+      win_updates:
+        category_names: 
+          - SecurityUpdates 
+          - CriticalUpdates 
+          - UpdateRollups 
+          - Updates
+        state: searched
+        log_path: C:ansible_wu.txt
+
+    - name: Install SecurityUpdates and CriticalUpdates
+      win_updates:
+        category_names: 
+          - SecurityUpdates 
+          - CriticalUpdates
+          - UpdateRollups
+          - Updates
+        reboot: yes
+        log_path: C:ansible_installedpatch.txt
